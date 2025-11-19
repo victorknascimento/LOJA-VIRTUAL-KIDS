@@ -18,29 +18,41 @@
     <!-- HEADER -->
     <header class="header">
         <div class="container header-content">
-            <a href="#" class="logo" onclick="app.router('home'); return false;">
-                <h1>Juju Kids</h1>
+            
+            <!-- Logo + Subtítulo (Esquerda) -->
+            <a href="#" class="logo-container" onclick="app.router('home'); return false;">
+                <h1 class="logo-title">Juju Kids</h1>
+                <span class="logo-subtitle">Loja Virtual</span>
             </a>
             
-            <nav class="nav-links">
-                <!-- Link Admin (Invisível se não for admin) -->
-                <a href="#" id="nav-admin" class="hidden" onclick="app.router('admin'); return false;">Admin</a>
-
-                <!-- Carrinho -->
-                <a href="#" class="cart-icon-container" onclick="app.router('cart'); return false;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
-                    <span id="cart-count" class="cart-badge hidden">0</span>
-                </a>
-
-                <!-- Área do Usuário -->
-                <div id="user-area">
-                    <button id="btn-login-nav" class="btn-outline-light" onclick="app.router('login')">Login</button>
-                    <div id="user-logged-in" class="hidden">
-                        <span id="user-name-display"></span>
-                        <button class="btn-text-light" onclick="app.logout()">Sair</button>
-                    </div>
+            <!-- Lado Direito: Status + Nav -->
+            <div class="header-right">
+                
+                <!-- Status da Loja (Movido para cá) -->
+                <div id="store-status" class="header-status">
+                    <!-- Inserido via JS -->
                 </div>
-            </nav>
+
+                <nav class="nav-links">
+                    <!-- Link Admin (Invisível se não for admin) -->
+                    <a href="#" id="nav-admin" class="hidden" onclick="app.router('admin'); return false;">Admin</a>
+
+                    <!-- Carrinho -->
+                    <a href="#" class="cart-icon-container" onclick="app.router('cart'); return false;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                        <span id="cart-count" class="cart-badge hidden">0</span>
+                    </a>
+
+                    <!-- Área do Usuário -->
+                    <div id="user-area">
+                        <button id="btn-login-nav" class="btn-outline-light" onclick="app.router('login')">Login</button>
+                        <div id="user-logged-in" class="hidden">
+                            <span id="user-name-display"></span>
+                            <button class="btn-text-light" onclick="app.logout()">Sair</button>
+                        </div>
+                    </div>
+                </nav>
+            </div>
         </div>
     </header>
 
@@ -56,14 +68,7 @@
         
         <!-- VIEW: HOME -->
         <section id="view-home" class="view">
-            <div class="hero-text">
-                <h2>Juju Kids</h2>
-                <p>Loja Virtual</p>
-            </div>
-            
-            <div id="store-status" class="status-banner">
-                <!-- Inserido via JS -->
-            </div>
+            <!-- Banner status removido daqui -->
 
             <div id="products-grid" class="products-grid">
                 <!-- Produtos inseridos via JS -->

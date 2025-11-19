@@ -1,4 +1,5 @@
 
+
 /**
  * JUJU KIDS - Vanilla JS Implementation
  * Lógica consolidada para rodar sem build tools
@@ -114,17 +115,18 @@ const app = {
         state.isStoreOpen = (hour >= morning.start && hour < morning.end) || 
                            (hour >= afternoon.start && hour < afternoon.end);
         
-        // Atualizar banner se estiver na home
+        // Atualizar banner no Header (ID mudou de posição)
         const banner = document.getElementById('store-status');
         if (banner) {
             if (state.isStoreOpen) {
-                banner.innerHTML = `<div class="status-open"><strong>Loja Aberta!</strong> Estamos recebendo pedidos.</div>`;
+                banner.innerHTML = `<div class="status-open">Loja Aberta</div>`;
             } else {
-                const times = `${morning.start}h-${morning.end}h e ${afternoon.start}h-${afternoon.end}h`;
-                banner.innerHTML = `<div class="status-closed"><strong>Loja Fechada.</strong> Horários: ${times}</div>`;
+                // Mensagem curta para o header
+                banner.innerHTML = `<div class="status-closed">Fechado (${morning.start}h-${morning.end}h)</div>`;
             }
         }
-        // Re-renderizar home para atualizar botões
+        
+        // Re-renderizar home para atualizar botões (se necessário)
         if (!document.getElementById('view-home').classList.contains('hidden')) {
             app.renderHome();
         }
@@ -208,6 +210,10 @@ const app = {
     // --- HOME & PRODUTOS ---
     renderHome: () => {
         const grid = document.getElementById('products-grid');
+        // Removemos o hero-text que estava duplicado
+        const heroText = document.querySelector('.hero-text');
+        if(heroText) heroText.remove(); // Limpeza se ainda existir no DOM velho
+        
         grid.innerHTML = state.products.map(p => `
             <div class="product-card">
                 <img src="${p.imageUrl}" alt="${p.name}" loading="lazy">
