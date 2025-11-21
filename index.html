@@ -9,8 +9,8 @@
     <!-- Fontes -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Apenas Raleway é necessário agora, mas mantendo as outras para fallback -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Poppins:wght@400;500;600;700&family=Raleway:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Adicionando Nunito para a Logo (Fonte arredondada) -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@800&family=Montserrat:wght@700&family=Poppins:wght@400;500;600;700&family=Raleway:wght@300;400;500;700&display=swap" rel="stylesheet">
     
     <!-- Estilos Locais (Uso de ./ para garantir caminho relativo) -->
     <link rel="stylesheet" href="./style.css">
@@ -24,21 +24,40 @@
             <!-- Logo + Subtítulo (Esquerda) -->
             <a href="#" class="logo-container" onclick="app.router('home'); return false;">
                 <!-- 
-                   LOGO: SVG Inline 
-                   Substitui a imagem quebrada. Desenho vetorial branco da Juju Kids com Bala.
+                   LOGO: SVG com Texto Real (Fonte Nunito)
+                   Garante que o texto fique branco, arredondado e legível.
                 -->
-                <svg class="logo-img" viewBox="0 0 280 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <!-- Texto 'juju' -->
-                    <path d="M25.6 54.8C28.8 54.8 31.4 53.6 33.4 51.2V29.6H41.2V50.8C41.2 55.4 39.7 59 36.7 61.5C33.7 64 29.8 65.2 25 65.2C21.5 65.2 18.6 64.5 16.4 63.1L18.6 56.5C20.4 57.4 22.7 57.9 25.6 57.9C27.2 57.9 28.5 57.5 29.4 56.7C30.3 55.9 30.7 54.8 30.7 53.4V51.2C29.2 53.6 26.8 54.8 23.4 54.8H25.6ZM23.4 22.4C25.8 22.4 27.7 20.5 27.7 18.1C27.7 15.7 25.8 13.8 23.4 13.8C21 13.8 19.1 15.7 19.1 18.1C19.1 20.5 21 22.4 23.4 22.4ZM65.8 54.8C68.2 54.8 70.3 53.9 72.1 52.1V29.6H79.9V51.5C79.9 55.7 78.6 59.1 75.9 61.6C73.2 64.1 69.6 65.3 65.1 65.3C61.3 65.3 58.1 64.4 55.5 62.5L58.1 55.9C59.9 57.2 62.5 57.9 65.8 57.9C67.9 57.9 69.6 57.3 70.8 56.1C72 54.9 72.6 53.3 72.6 51.2V49.6C70.8 51.7 68.5 52.8 65.6 52.8V54.8ZM98.1 54.8C100.5 54.8 102.6 53.9 104.4 52.1V29.6H112.2V51.5C112.2 55.7 110.9 59.1 108.2 61.6C105.5 64.1 101.9 65.3 97.4 65.3C93.6 65.3 90.4 64.4 87.8 62.5L90.4 55.9C92.2 57.2 94.8 57.9 98.1 57.9C100.2 57.9 101.9 57.3 103.1 56.1C104.3 54.9 104.9 53.3 104.9 51.2V49.6C103.1 51.7 100.8 52.8 97.9 52.8V54.8ZM95.7 22.4C98.1 22.4 100 20.5 100 18.1C100 15.7 98.1 13.8 95.7 13.8C93.3 13.8 91.4 15.7 91.4 18.1C91.4 20.5 93.3 22.4 95.7 22.4ZM138.5 54.8C140.9 54.8 143 53.9 144.8 52.1V29.6H152.6V51.5C152.6 55.7 151.3 59.1 148.6 61.6C145.9 64.1 142.3 65.3 137.8 65.3C134 65.3 130.8 64.4 128.2 62.5L130.8 55.9C132.6 57.2 135.2 57.9 138.5 57.9C140.6 57.9 142.3 57.3 143.5 56.1C144.7 54.9 145.3 53.3 145.3 51.2V49.6C143.5 51.7 141.2 52.8 138.3 52.8V54.8Z" fill="white"/>
-                    <!-- Icone Bala (Centro/Topo estilizado) -->
-                    <path d="M175 25C175 25 185 15 195 15C205 15 210 25 210 25L220 20L225 30L215 35C215 35 210 45 200 45C190 45 180 35 180 35L170 40L165 30L175 25Z" fill="white" fill-opacity="0.3"/>
-                    <path d="M180 30C180 27.2 182.2 25 185 25H205C207.8 25 210 27.2 210 30V35C210 37.8 207.8 40 205 40H185C182.2 40 180 37.8 180 35V30Z" fill="white"/>
-                    <!-- Olhos e Boca da Bala (vazados no branco) -->
-                    <circle cx="190" cy="31" r="2" fill="#ec4899"/>
-                    <circle cx="200" cy="31" r="2" fill="#ec4899"/>
-                    <path d="M192 36C192 36 195 38 198 36" stroke="#ec4899" stroke-width="1.5" stroke-linecap="round"/>
-                    <!-- Texto 'Kids' -->
-                    <path d="M235 60V15H242V40L255 25H265L252 39L266 60H257L246 44L242 48V60H235ZM275 22C275 19.8 276.8 18 279 18C281.2 18 283 19.8 283 22C283 24.2 281.2 26 279 26C276.8 26 275 24.2 275 22ZM276 60V30H282V60H276ZM305 60V55C303 58 300 60.5 296 60.5C291 60.5 287 56.5 287 51C287 45.5 291 41.5 296 41.5C300 41.5 303 43.5 305 46V15H312V60H305ZM300 54.5C302.5 54.5 305 52.5 305 51C305 49.5 302.5 47.5 300 47.5C297.5 47.5 294 49 294 51C294 53 297.5 54.5 300 54.5ZM325 60.5C320 60.5 317 57.5 317 54H323C323.5 55.5 324.5 56.5 326 56.5C327.5 56.5 328.5 55.5 328.5 54.5C328.5 53 327 52.5 324 52C319 51 317 48.5 317 45.5C317 42.5 320 40.5 324 40.5C328 40.5 331 42.5 332 45H327C326.5 44 325.5 43.5 324 43.5C322.5 43.5 321.5 44 321.5 45C321.5 46 323 46.5 326 47C331 48 333 50.5 333 53.5C333 57.5 330 60.5 325 60.5Z" fill="white"/>
+                <svg class="logo-img" viewBox="0 0 340 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <style>
+                            .logo-text { 
+                                font-family: 'Nunito', sans-serif; 
+                                font-weight: 800; 
+                                fill: #ffffff;
+                                text-transform: uppercase;
+                            }
+                        </style>
+                    </defs>
+                    
+                    <!-- Texto JUJU -->
+                    <text x="0" y="45" font-size="48" class="logo-text">JUJU</text>
+                    
+                    <!-- Ícone de Bala (Centralizado e Fofo) -->
+                    <g transform="translate(135, 8) scale(0.9)">
+                        <!-- Embalagem Esq -->
+                        <path d="M5 15 L-2 10 C-5 8 -8 12 -6 15 L0 25 L-6 35 C-8 38 -5 42 -2 40 L 5 35" fill="white" fill-opacity="0.7"/>
+                        <!-- Embalagem Dir -->
+                        <path d="M45 15 L52 10 C55 8 58 12 56 15 L50 25 L56 35 C58 38 55 42 52 40 L 45 35" fill="white" fill-opacity="0.7"/>
+                        <!-- Corpo da Bala -->
+                        <rect x="5" y="10" width="40" height="30" rx="15" fill="white"/>
+                        <!-- Rostinho -->
+                        <circle cx="18" cy="22" r="3" fill="#ec4899"/>
+                        <circle cx="32" cy="22" r="3" fill="#ec4899"/>
+                        <path d="M18 30 Q 25 36 32 30" stroke="#ec4899" stroke-width="3" stroke-linecap="round" fill="none"/>
+                    </g>
+
+                    <!-- Texto KIDS -->
+                    <text x="205" y="45" font-size="48" class="logo-text">KIDS</text>
                 </svg>
                 
                 <span class="logo-subtitle">Loja Virtual</span>
