@@ -1,5 +1,6 @@
 
 
+
 /**
  * JUJU KIDS - Vanilla JS Implementation
  * Lógica consolidada para rodar sem build tools
@@ -41,6 +42,19 @@ const Storage = {
         return val ? JSON.parse(val) : def;
     },
     set: (key, val) => localStorage.setItem(key, JSON.stringify(val)),
+};
+
+// --- UTILITÁRIOS ---
+const Utils = {
+    // Converte arquivo para Base64
+    fileToBase64: (file) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
+    }
 };
 
 // --- LÓGICA PRINCIPAL ---
@@ -394,32 +408,59 @@ const app = {
     openProductModal: (product = null) => {
         const modal = document.getElementById('modal-product');
         modal.classList.remove('hidden');
+        const preview = document.getElementById('prod-image-preview');
+        const fileInput = document.getElementById('prod-image-file');
         
+        // Resetar file input
+        fileInput.value = '';
+
         if (product) {
             document.getElementById('prod-id').value = product.id;
             document.getElementById('prod-name').value = product.name;
             document.getElementById('prod-category').value = product.category;
             document.getElementById('prod-price').value = product.price;
-            document.getElementById('prod-image').value = product.imageUrl;
             document.getElementById('prod-desc').value = product.description;
+            
+            // Gerenciar Imagem (URL existente)
+            document.getElementById('prod-image-current').value = product.imageUrl;
+            preview.src = product.imageUrl;
+            preview.classList.add('visible');
         } else {
             document.getElementById('prod-id').value = '';
             document.getElementById('prod-name').value = '';
             document.getElementById('prod-category').value = '';
             document.getElementById('prod-price').value = '';
-            document.getElementById('prod-image').value = '';
             document.getElementById('prod-desc').value = '';
+            document.getElementById('prod-image-current').value = '';
+            preview.classList.remove('visible');
+            preview.src = '';
         }
     },
 
-    handleSaveProduct: (e) => {
+    handleSaveProduct: async (e) => {
         e.preventDefault();
         const id = document.getElementById('prod-id').value;
+        const fileInput = document.getElementById('prod-image-file');
+        let finalImageUrl = document.getElementById('prod-image-current').value;
+
+        // Se usuário selecionou um novo arquivo
+        if (fileInput.files && fileInput.files[0]) {
+            try {
+                finalImageUrl = await Utils.fileToBase64(fileInput.files[0]);
+            } catch (err) {
+                alert('Erro ao processar imagem');
+                return;
+            }
+        } else if (!finalImageUrl) {
+            // Se não tem arquivo novo nem imagem antiga
+            finalImageUrl = 'https://via.placeholder.com/400'; // Fallback
+        }
+
         const prodData = {
             name: document.getElementById('prod-name').value,
             category: document.getElementById('prod-category').value,
             price: parseFloat(document.getElementById('prod-price').value),
-            imageUrl: document.getElementById('prod-image').value,
+            imageUrl: finalImageUrl,
             description: document.getElementById('prod-desc').value,
         };
 

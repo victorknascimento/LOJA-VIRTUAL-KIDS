@@ -10,9 +10,8 @@
     --danger: #ef4444;
     --success: #10b981; /* Green 500 */
     
-    --font-sans: 'Poppins', sans-serif;
-    --font-display: 'Montserrat', sans-serif;
-    --font-price: 'Raleway', sans-serif;
+    /* Mudança: Raleway como fonte principal para tudo ficar com a "finura" do preço */
+    --font-main: 'Raleway', sans-serif; 
 }
 
 * {
@@ -22,12 +21,22 @@
 }
 
 body {
-    font-family: var(--font-sans);
+    font-family: var(--font-main);
+    font-weight: 300; /* Finura igual a dos preços */
     background-color: #ffffff;
     color: var(--text-dark);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 400; /* Títulos levemente mais grossos, mas ainda finos */
+}
+
+button, input, select, textarea {
+    font-family: var(--font-main);
+    font-weight: 400;
 }
 
 /* Utilities */
@@ -55,7 +64,7 @@ body {
     position: sticky;
     top: 0;
     z-index: 50;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
     padding: 0.5rem 0;
 }
 
@@ -71,22 +80,42 @@ body {
     flex-direction: column;
     text-decoration: none;
     line-height: 1;
+    justify-content: center;
 }
 
-.logo-title {
-    font-family: var(--font-display);
-    font-size: 1.5rem;
-    color: white;
-    text-transform: uppercase;
-    margin: 0;
+/* Estilo da Imagem da Logo com FILTRO MÁGICO */
+.logo-img {
+    height: 50px; /* Altura levemente aumentada para legibilidade */
+    width: auto;
+    object-fit: contain;
+    display: block;
+    
+    /* TRUQUE PARA TORNAR A LOGO BRANCA E SEM FUNDO */
+    /* Se a imagem tiver fundo branco e texto preto: 
+       - Invert transforma fundo em PRETO e texto em BRANCO.
+       - mix-blend-mode: screen faz o PRETO ficar transparente.
+       - Brightness/Grayscale garante que o texto fique Branco Puro.
+    */
+    filter: brightness(0) invert(1); 
+    /* Nota: Se a sua imagem for PNG Transparente com texto PRETO, 
+       o filtro acima já a transforma em texto BRANCO corretamente. */
+       
+    opacity: 1;
+    transition: transform 0.2s;
+}
+
+.logo-container:hover .logo-img {
+    transform: scale(1.05);
 }
 
 .logo-subtitle {
-    color: rgba(255, 255, 255, 0.85);
-    font-size: 0.7rem; /* Menor conforme solicitado */
-    font-weight: 400;
-    letter-spacing: 0.5px;
-    margin-top: 2px;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.6rem; 
+    font-weight: 400; /* Ajustado para Raleway */
+    text-transform: uppercase; 
+    letter-spacing: 2px; 
+    margin-top: 4px;
+    margin-left: 2px;
 }
 
 /* Lado Direito do Header */
@@ -96,7 +125,7 @@ body {
     gap: 1rem;
 }
 
-/* Status no Header (Estilo Novo) */
+/* Status no Header (Estilo Novo - Cápsula) */
 .header-status {
     display: flex;
     align-items: center;
@@ -106,15 +135,19 @@ body {
 .status-badge {
     display: flex;
     align-items: center;
-    gap: 6px;
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    background-color: rgba(255, 255, 255, 0.15); /* Fundo translúcido */
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    backdrop-filter: blur(4px);
+    gap: 8px;
+    padding: 6px 14px;
+    border-radius: 50px; /* Formato Pilula Completa */
+    font-size: 0.7rem;
+    font-weight: 600; /* Raleway bold é menos grosso que Arial bold */
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background-color: white; /* Fundo Branco para contraste */
+    color: var(--primary); /* Texto Rosa */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    white-space: nowrap; /* Impede quebra de linha */
     transition: all 0.3s ease;
+    border: 2px solid transparent;
 }
 
 /* Ponto indicador (Bolinha) */
@@ -122,48 +155,59 @@ body {
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background-color: #ccc;
+    flex-shrink: 0;
 }
 
 /* Estilos específicos Aberto/Fechado */
+.status-badge.open {
+    border-color: #dcfce7; /* Borda sutil verde muito clara */
+}
 .status-badge.open .status-dot {
-    background-color: #4ade80; /* Verde brilhante */
-    box-shadow: 0 0 8px rgba(74, 222, 128, 0.6);
+    background-color: #22c55e; /* Verde vibrante */
+    box-shadow: 0 0 0 2px #dcfce7;
     animation: pulse-green 2s infinite;
 }
-
-.status-badge.closed .status-dot {
-    background-color: #f87171; /* Vermelho suave */
+.status-badge.open .status-text-label {
+    color: #15803d; /* Verde escuro para leitura */
 }
 
 .status-badge.closed {
-    opacity: 0.8;
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: rgba(255,255,255, 0.9);
+    color: #991b1b;
+}
+.status-badge.closed .status-dot {
+    background-color: #ef4444; /* Vermelho */
 }
 
-/* Animação de Pulso */
+/* Animação de Pulso Refinada */
 @keyframes pulse-green {
     0% {
         transform: scale(0.95);
-        box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7);
+        box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4);
     }
     70% {
         transform: scale(1);
-        box-shadow: 0 0 0 6px rgba(74, 222, 128, 0);
+        box-shadow: 0 0 0 6px rgba(34, 197, 94, 0);
     }
     100% {
         transform: scale(0.95);
-        box-shadow: 0 0 0 0 rgba(74, 222, 128, 0);
+        box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
     }
 }
 
 /* Responsividade do Status */
 @media (max-width: 480px) {
     .status-text-label {
-        display: none; /* Esconde o texto "Loja Aberta" em telas minúsculas, deixa só a bolinha se quiser, ou remove tudo */
+        display: none; 
     }
-    .header-status {
-        display: none; /* Por enquanto removendo em telas muito pequenas para priorizar o carrinho */
+    .status-badge {
+        padding: 6px; /* Bola redonda no mobile */
+        width: 24px;
+        height: 24px;
+        justify-content: center;
+    }
+    .status-dot {
+        margin: 0;
     }
 }
 
@@ -194,7 +238,7 @@ body {
     right: -8px;
     background-color: white;
     color: var(--primary);
-    font-weight: bold;
+    font-weight: 600;
     font-size: 0.7rem;
     border-radius: 50%;
     width: 1.1rem;
@@ -211,8 +255,8 @@ body {
     border-radius: 0.5rem;
     border: none;
     cursor: pointer;
-    font-family: var(--font-sans);
-    font-weight: 600;
+    font-family: var(--font-main);
+    font-weight: 500;
     transition: all 0.2s;
 }
 
@@ -326,9 +370,9 @@ body {
 }
 
 .price {
-    font-family: var(--font-price);
+    font-family: var(--font-main); /* Agora usa Raleway */
     font-size: 1.5rem;
-    font-weight: 300;
+    font-weight: 300; /* Finura mantida */
 }
 
 /* Forms */
@@ -354,6 +398,7 @@ body {
     border: 1px solid var(--gray-200);
     border-radius: 0.5rem;
     font-family: inherit;
+    font-weight: 300; /* Inputs finos também */
 }
 .full-width { width: 100%; }
 
@@ -440,7 +485,7 @@ body {
     padding: 1rem;
     border-radius: 0.5rem;
     margin: 1.5rem 0;
-    font-weight: 600;
+    font-weight: 500;
 }
 
 /* Admin */
@@ -456,6 +501,7 @@ body {
     border-bottom: 2px solid transparent;
     border-radius: 0;
     color: var(--text-dark);
+    font-weight: 500;
 }
 .btn-tab.active {
     border-bottom-color: var(--primary);
@@ -517,3 +563,19 @@ body {
 }
 .footer h3 { color: white; margin-bottom: 0.5rem; }
 .copyright { font-size: 0.875rem; opacity: 0.8; margin-top: 1rem; }
+
+/* Preview da imagem no Admin */
+.image-preview-container {
+    margin-top: 10px;
+    text-align: center;
+}
+.image-preview {
+    max-width: 100%;
+    max-height: 150px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    display: none; /* Oculto por padrão */
+}
+.image-preview.visible {
+    display: block;
+}
