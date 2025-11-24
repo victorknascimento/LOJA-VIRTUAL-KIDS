@@ -10,6 +10,8 @@ const CONSTANTS = {
         morning: { start: 8, end: 12 },
         afternoon: { start: 14, end: 18 },
     },
+    // ATENÇÃO: Para atualizar os produtos para TODOS os clientes,
+    // você deve alterar esta lista abaixo manualmente ou usar o gerador no Admin.
     INITIAL_PRODUCTS: [
         { id: '1', name: 'Conjunto Verão Menina', description: '100% algodão.', price: 89.90, imageUrl: 'https://picsum.photos/seed/prod1/400/400', category: 'Meninas' },
         { id: '2', name: 'Vestido Floral Infantil', description: 'Vestido rodado.', price: 129.90, imageUrl: 'https://picsum.photos/seed/prod2/400/400', category: 'Meninas' },
@@ -64,10 +66,14 @@ const app = {
             Storage.set('users', state.users);
         }
 
-        state.products = Storage.get('products', []);
-        if (state.products.length === 0) {
+        // Carrega produtos. Se o LocalStorage estiver vazio ou diferente do código, prioriza o código para garantir consistência em updates
+        // Mas permite edições locais.
+        const storedProducts = Storage.get('products', []);
+        if (storedProducts.length === 0) {
             state.products = CONSTANTS.INITIAL_PRODUCTS;
             Storage.set('products', state.products);
+        } else {
+            state.products = storedProducts;
         }
 
         state.cart = Storage.get('cart', []);
@@ -136,10 +142,10 @@ const app = {
         toast.innerText = message;
         toast.classList.add('show');
 
-        // Remove após 1 segundo (1000ms)
+        // Remove após 3 segundos
         setTimeout(() => {
             toast.classList.remove('show');
-        }, 1000);
+        }, 3000);
     },
 
     // --- AUTH ---
@@ -221,7 +227,6 @@ const app = {
     renderHome: () => {
         const grid = document.getElementById('products-grid');
         
-        // Botão agora sempre ativo (sem lógica disabled)
         grid.innerHTML = state.products.map(p => `
             <div class="product-card">
                 <img src="${p.imageUrl}" alt="${p.name}" loading="lazy">
@@ -240,13 +245,12 @@ const app = {
 
     // --- CARRINHO ---
     addToCart: (id) => {
-        // Verificação de Loja Fechada
         if (!state.isStoreOpen) {
             const { morning, afternoon } = CONSTANTS.OPERATING_HOURS;
-            alert(`A LOJA ESTÁ FECHADA AGORA!\n\nNossos horários de atendimento são:\nManhã: ${morning.start}h às ${morning.end}h\nTarde: ${afternoon.start}h às ${afternoon.end}h\n\nAguardamos você no próximo horário!`);
-            return;
+            alert(`A LOJA ESTÁ FECHADA AGORA!\n\nAtendimento:\n${morning.start}h às ${morning.end}h\n${afternoon.start}h às ${afternoon.end}h\n\nAguardamos você!`);
         }
 
+        // Permite adicionar mesmo fechado, mas avisa
         const product = state.products.find(p => p.id === id);
         const existing = state.cart.find(item => item.id === id);
         
@@ -258,8 +262,6 @@ const app = {
         
         Storage.set('cart', state.cart);
         app.updateHeader();
-        
-        // Notificação de sucesso
         app.showToast('Produto adicionado ao carrinho!');
     },
 
@@ -368,15 +370,11 @@ const app = {
 
     // --- ADMIN ---
     switchAdminTab: (tab) => {
-        // Esconde todas as seções
         document.querySelectorAll('.admin-section').forEach(el => el.classList.add('hidden'));
-        // Remove active de todos os botões
         document.querySelectorAll('.btn-tab').forEach(el => el.classList.remove('active'));
         
-        // Mostra a seção alvo
         document.getElementById(`admin-tab-${tab}`).classList.remove('hidden');
         
-        // Ativa o botão correto
         const buttons = document.querySelectorAll('.btn-tab');
         if(tab === 'products') buttons[0].classList.add('active');
         if(tab === 'orders') {
@@ -387,9 +385,7 @@ const app = {
             buttons[2].classList.add('active');
             app.renderAdminUsers();
         }
-        if(tab === 'reports') {
-            buttons[3].classList.add('active');
-        }
+        if(tab === 'reports') buttons[3].classList.add('active');
     },
 
     renderAdminProducts: () => {
@@ -414,7 +410,6 @@ const app = {
         const fileInput = document.getElementById('prod-image-file');
         const urlInput = document.getElementById('prod-image-url');
         
-        // Resetar inputs
         fileInput.value = '';
         urlInput.value = '';
 
@@ -425,7 +420,6 @@ const app = {
             document.getElementById('prod-price').value = product.price;
             document.getElementById('prod-desc').value = product.description;
             
-            // Preencher URL se existir
             document.getElementById('prod-image-current').value = product.imageUrl;
             if (product.imageUrl.startsWith('http')) {
                 urlInput.value = product.imageUrl;
@@ -435,7 +429,7 @@ const app = {
         } else {
             document.getElementById('prod-id').value = '';
             document.getElementById('prod-name').value = '';
-            document.getElementById('prod-category').value = '';
+            document.getElementById('prod-category').value = 'Meninas';
             document.getElementById('prod-price').value = '';
             document.getElementById('prod-desc').value = '';
             document.getElementById('prod-image-current').value = '';
@@ -450,18 +444,14 @@ const app = {
         const fileInput = document.getElementById('prod-image-file');
         const urlInput = document.getElementById('prod-image-url');
         let finalImageUrl = document.getElementById('prod-image-current').value;
-
-        // Lógica de prioridade de imagem:
-        // 1. URL digitada (melhor para compartilhamento)
-        // 2. Arquivo enviado (base64, só local)
-        // 3. Imagem que já existia
-        // 4. Fallback
+        let isLocalFile = false;
 
         if (urlInput.value && urlInput.value.trim() !== '') {
              finalImageUrl = urlInput.value.trim();
         } else if (fileInput.files && fileInput.files[0]) {
             try {
                 finalImageUrl = await Utils.fileToBase64(fileInput.files[0]);
+                isLocalFile = true;
             } catch (err) {
                 alert('Erro ao processar arquivo');
                 return;
@@ -485,10 +475,25 @@ const app = {
             state.products.push({ ...prodData, id: Date.now().toString() });
         }
 
+        // Salvar localmente
         Storage.set('products', state.products);
         document.getElementById('modal-product').classList.add('hidden');
         app.renderAdminProducts();
         if (document.getElementById('view-home').style.display !== 'none') app.renderHome();
+
+        // ----------------------------------------------------
+        // CRÍTICO: Explicar ao usuário que ele precisa atualizar o código
+        // ----------------------------------------------------
+        if (isLocalFile) {
+            alert("ATENÇÃO: Você usou uma imagem do celular (arquivo). O código gerado será GIGANTE. \n\nRecomendamos usar links da internet (URL) para que o site fique leve e fácil de atualizar.");
+        }
+
+        app.showToast("Produto Salvo Localmente!");
+        
+        setTimeout(() => {
+            alert("IMPORTANTE: Para que seus clientes vejam as mudanças, você precisa copiar o CÓDIGO NOVO e atualizar o site. \n\nVou gerar o código agora!");
+            app.generateUpdateCode();
+        }, 500);
     },
 
     editProduct: (id) => {
@@ -501,6 +506,11 @@ const app = {
             state.products = state.products.filter(p => p.id !== id);
             Storage.set('products', state.products);
             app.renderAdminProducts();
+            
+            setTimeout(() => {
+                alert("IMPORTANTE: Para remover o produto para os clientes, gere o código e atualize o site.");
+                app.generateUpdateCode();
+            }, 500);
         }
     },
 
@@ -508,13 +518,14 @@ const app = {
     generateUpdateCode: () => {
         const currentProducts = Storage.get('products', CONSTANTS.INITIAL_PRODUCTS);
         
-        // Formata o JSON de produtos como uma string de código JS válida
         const productsString = JSON.stringify(currentProducts, null, 4);
         
         const codeBlock = `
-// 1. Copie este bloco inteiro.
-// 2. No arquivo script.js, procure por "INITIAL_PRODUCTS".
-// 3. Substitua todo o bloco INITIAL_PRODUCTS pelo código abaixo:
+// CÓDIGO DE ATUALIZAÇÃO - Juju Kids
+// 1. Abra o arquivo "script.js"
+// 2. Procure onde diz "INITIAL_PRODUCTS"
+// 3. APAGUE tudo que estiver dentro dos colchetes [ ... ] do INITIAL_PRODUCTS e cole o código abaixo.
+// OU simplesmente substitua a constante inteira por:
 
 INITIAL_PRODUCTS: ${productsString}
         `;
@@ -531,7 +542,6 @@ INITIAL_PRODUCTS: ${productsString}
             container.innerHTML = '<p>Sem pedidos.</p>';
             return;
         }
-        // Ordenar mais recente primeiro
         const sorted = [...state.orders].sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
         
         container.innerHTML = sorted.map(o => `
@@ -556,33 +566,20 @@ INITIAL_PRODUCTS: ${productsString}
             <tr>
                 <td>${u.name}</td>
                 <td>${u.phone}</td>
-                <td><span style="padding:2px 6px; border-radius:4px; background:${u.role === 'ADMIN' ? '#e9d5ff' : '#bbf7d0'}; font-size:0.8rem;">${u.role}</span></td>
+                <td>${u.role}</td>
             </tr>
         `).join('');
     },
 
-    // --- EXCEL / CSV EXPORT ---
     exportUsersToExcel: () => {
-        // Cabeçalho do CSV
         const headers = ['Nome', 'Telefone', 'Perfil', 'ID'];
-        
-        // Dados
-        const rows = state.users.map(u => [
-            u.name,
-            u.phone,
-            u.role,
-            u.id
-        ]);
+        const rows = state.users.map(u => [u.name, u.phone, u.role, u.id]);
 
-        // Montar CSV com separador ponto-e-vírgula (melhor para Excel PT-BR)
-        // Adiciona BOM (\uFEFF) para forçar UTF-8 no Excel
         let csvContent = '\uFEFF' + headers.join(';') + '\n';
-        
         rows.forEach(row => {
             csvContent += row.join(';') + '\n';
         });
 
-        // Criar Blob e Link
         const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
@@ -595,5 +592,4 @@ INITIAL_PRODUCTS: ${productsString}
     }
 };
 
-// Iniciar App
 document.addEventListener('DOMContentLoaded', app.init);
