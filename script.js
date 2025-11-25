@@ -19,7 +19,6 @@ const Storage = {
     get: (key, def) => {
         try {
             const val = localStorage.getItem(key);
-            // Se existir mas for array vazio, considera como não existente para carregar o demo
             if (val) {
                 const parsed = JSON.parse(val);
                 if (Array.isArray(parsed) && parsed.length === 0) return def;
@@ -41,71 +40,71 @@ const state = {
     isStoreOpen: true 
 };
 
-// --- CATÁLOGO WONDER KIDS (Produtos Fixos para Apresentação) ---
+// --- CATÁLOGO WONDER KIDS (Produtos da Segunda Imagem) ---
 const DEMO_PRODUCTS = [
     {
-        id: 'wk_001',
-        name: 'Vestido Floral Primavera',
+        id: 'wk_new_01',
+        name: 'Bermuda infantil masculina',
+        category: 'Meninos',
+        price: 59.90,
+        imageUrl: 'https://images.unsplash.com/photo-1519238263496-6362d74c1123?q=80&w=600&auto=format&fit=crop', // Menino de short
+        description: 'Bermuda jeans confortável e estilosa para o dia a dia.'
+    },
+    {
+        id: 'wk_new_02',
+        name: 'Macacão Bebê',
+        category: 'Bebês',
+        price: 45.90,
+        imageUrl: 'https://images.unsplash.com/photo-1522771930-78848d9293e8?q=80&w=600&auto=format&fit=crop', // Macacão bege
+        description: 'Conforto total para o seu bebê com tecido macio.'
+    },
+    {
+        id: 'wk_new_03',
+        name: 'Moletom Feminino (Conjunto)',
+        category: 'Meninas',
+        price: 79.80,
+        imageUrl: 'https://images.unsplash.com/photo-1610419864275-c9607386c12b?q=80&w=600&auto=format&fit=crop', // Conjunto rosa
+        description: 'Conjunto de frio super quentinho e na moda.'
+    },
+    {
+        id: 'wk_new_04',
+        name: 'Sandália Colorida',
+        category: 'Calçados',
+        price: 49.90,
+        imageUrl: 'https://images.unsplash.com/photo-1514989940723-e8875ea6ab7d?q=80&w=600&auto=format&fit=crop', // Sandália
+        description: 'Sandália anatômica e colorida para combinar com tudo.'
+    },
+    {
+        id: 'wk_new_05',
+        name: 'Camiseta Dinossauro',
+        category: 'Meninos',
+        price: 39.90,
+        imageUrl: 'https://images.unsplash.com/photo-1622290291468-a28f7a7dc6a8?q=80&w=600&auto=format&fit=crop', // Camisa dino
+        description: 'Estampa divertida de dinossauros que eles amam.'
+    },
+    {
+        id: 'wk_new_06',
+        name: 'Vestido Floral Infantil',
         category: 'Meninas',
         price: 89.90,
-        imageUrl: 'https://images.unsplash.com/photo-1621452773781-0f992ee6191a?q=80&w=600&auto=format&fit=crop',
-        description: 'Vestido leve com estampa floral, ideal para passeios ao ar livre.'
+        imageUrl: 'https://images.unsplash.com/photo-1621452773781-0f992ee6191a?q=80&w=600&auto=format&fit=crop', // Vestido floral
+        description: 'Elegância e leveza para os dias de sol.'
     },
     {
-        id: 'wk_002',
-        name: 'Conjunto Dino Explorer',
+        id: 'wk_new_07',
+        name: 'Bermuda Jeans',
         category: 'Meninos',
-        price: 65.50,
-        imageUrl: 'https://images.unsplash.com/photo-1519238263496-6362d74c1123?q=80&w=600&auto=format&fit=crop',
-        description: 'Camiseta e bermuda confortáveis para pequenas aventuras.'
+        price: 79.90,
+        imageUrl: 'https://images.unsplash.com/photo-1596870230751-ebdfce98ec42?q=80&w=600&auto=format&fit=crop',
+        description: 'Jeans premium com ajuste na cintura.'
     },
     {
-        id: 'wk_003',
-        name: 'Jaqueta Jeans Kids',
+        id: 'wk_new_08',
+        name: 'Conjunto Verão Menina',
         category: 'Meninas',
-        price: 120.00,
-        imageUrl: 'https://images.unsplash.com/photo-1604467794349-0b74285de7e7?q=80&w=600&auto=format&fit=crop',
-        description: 'Estilo clássico e proteção contra o vento.'
-    },
-    {
-        id: 'wk_004',
-        name: 'Tênis Color Confort',
-        category: 'Calçados',
-        price: 99.90,
-        imageUrl: 'https://images.unsplash.com/photo-1514989940723-e8875ea6ab7d?q=80&w=600&auto=format&fit=crop',
-        description: 'Solado macio para brincar o dia todo sem cansar.'
-    },
-    {
-        id: 'wk_005',
-        name: 'Macacão Ursinho Polar',
-        category: 'Bebês',
-        price: 75.00,
-        imageUrl: 'https://images.unsplash.com/photo-1522771930-78848d9293e8?q=80&w=600&auto=format&fit=crop',
-        description: 'Tecido 100% algodão hipoalergênico, super fofo.'
-    },
-    {
-        id: 'wk_006',
-        name: 'Boné Street Style',
-        category: 'Meninos',
-        price: 35.00,
-        imageUrl: 'https://images.unsplash.com/photo-1544778393-010e9f02377b?q=80&w=600&auto=format&fit=crop',
-        description: 'Proteção solar com muito estilo urbano.'
-    },
-    {
-        id: 'wk_007',
-        name: 'Sapatilha Bailarina',
-        category: 'Calçados',
-        price: 55.90,
-        imageUrl: 'https://images.unsplash.com/photo-1560769629-975ec94e6a86?q=80&w=600&auto=format&fit=crop',
-        description: 'Delicadeza e brilho para ocasiões especiais.'
-    },
-    {
-        id: 'wk_008',
-        name: 'Camisa Polo Listrada',
-        category: 'Meninos',
-        price: 49.90,
-        imageUrl: 'https://images.unsplash.com/photo-1622290291468-a28f7a7dc6a8?q=80&w=600&auto=format&fit=crop',
-        description: 'Elegância casual para festas de aniversário.'
+        price: 69.90,
+        imageUrl: 'https://images.unsplash.com/photo-1519457431-44ccd64a579b?q=80&w=600&auto=format&fit=crop',
+        description: 'Para brincar com liberdade e frescor.'
     }
 ];
 
@@ -115,7 +114,6 @@ const app = {
         // Carregar Usuários Locais
         state.users = Storage.get('users', []);
         if (state.users.length === 0) {
-            // Cria o admin padrão se não existir
             state.users.push({ id: 'admin001', name: 'Admin', phone: '5585999195930', role: 'ADMIN' });
             Storage.set('users', state.users);
         }
@@ -127,8 +125,13 @@ const app = {
             state.currentUser = JSON.parse(sessionUser);
         }
 
-        // Carregar produtos (Lógica Blindada para Demo)
-        app.loadProducts();
+        // FORÇAR ATUALIZAÇÃO DOS PRODUTOS DEMO
+        // Isso garante que as fotos antigas sejam substituídas pelas novas da lista acima
+        console.log("Forçando atualização do catálogo Demo...");
+        state.products = DEMO_PRODUCTS;
+        Storage.set('products', DEMO_PRODUCTS);
+
+        app.renderHome();
 
         // Verificar horário
         app.checkStoreStatus();
@@ -137,33 +140,6 @@ const app = {
         // Renderizar inicial
         app.updateHeader();
         app.router('home');
-    },
-
-    loadProducts: () => {
-        const loadingEl = document.getElementById('loading-products');
-        
-        // Tenta pegar do LocalStorage primeiro (caso você tenha editado no seu celular)
-        // Se retornar null ou vazio, usa o DEMO_PRODUCTS
-        let localProducts = Storage.get('products', null);
-        
-        if (localProducts && localProducts.length > 0) {
-            console.log("Carregando produtos personalizados.");
-            state.products = localProducts;
-        } else {
-            console.log("Iniciando Modo Demonstração (Catálogo Padrão).");
-            state.products = DEMO_PRODUCTS;
-            // Salva o demo no localstorage para garantir que não fique vazio na próxima
-            Storage.set('products', DEMO_PRODUCTS);
-        }
-
-        if(loadingEl) loadingEl.style.display = 'none';
-        app.renderHome();
-        
-        // Se estiver na tela de admin, atualiza a tabela também
-        const adminView = document.getElementById('view-admin');
-        if(adminView && !adminView.classList.contains('hidden')) {
-            app.renderAdminProducts();
-        }
     },
 
     // --- ROTEAMENTO ---
@@ -308,6 +284,8 @@ const app = {
     // --- RENDERIZAÇÃO DA HOME ---
     renderHome: () => {
         const grid = document.getElementById('products-grid');
+        const loadingEl = document.getElementById('loading-products');
+        if(loadingEl) loadingEl.style.display = 'none';
         
         if (!state.products || state.products.length === 0) {
             grid.innerHTML = '<p class="text-center" style="grid-column:1/-1; padding: 2rem;">Carregando catálogo...</p>';
@@ -422,26 +400,6 @@ const app = {
             <span>Total</span>
             <span>R$ ${total.toFixed(2).replace('.', ',')}</span>
         </div>`;
-    },
-
-    handleCheckout: async (e) => {
-        e.preventDefault();
-        const street = document.getElementById('addr-street').value;
-        const city = document.getElementById('addr-city').value;
-        const total = state.cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
-
-        // Monta mensagem para WhatsApp
-        const itemsText = state.cart.map(i => `• ${i.quantity}x ${i.name}`).join('%0A');
-        const msg = `*NOVO PEDIDO - WONDER KIDS*%0A%0A${itemsText}%0A%0A*Total: R$ ${total.toFixed(2)}*%0A%0A📍 *Entrega:*%0A${street}, ${city}%0A%0A👤 *Cliente:* ${state.currentUser.name}`;
-        
-        // Abre WhatsApp
-        window.open(`https://wa.me/${CONSTANTS.STORE_PHONE}?text=${msg}`, '_blank');
-
-        // Limpa carrinho
-        state.cart = [];
-        Storage.set('cart', []);
-        app.updateHeader();
-        app.router('confirmation');
     },
 
     // --- ADMIN ---
